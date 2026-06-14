@@ -1,0 +1,3 @@
+# DualContext runtime deps. The demo (DUALCONTEXT_DEMO=1) runs with ZERO of
+# these — they are only needed to talk to a live Splunk MCP Server + hosted model.
+requests>=2.31

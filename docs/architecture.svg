@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1240" height="720" viewBox="0 0 1240 720" font-family="Inter, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="aG" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L8,3 L0,6 Z" fill="#65E075"/></marker>
+    <marker id="aT" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L8,3 L0,6 Z" fill="#1D9E75"/></marker>
+    <marker id="aD" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L8,3 L0,6 Z" fill="#5A6B8C"/></marker>
+  </defs>
+
+  <rect width="1240" height="720" fill="#0B0D12"/>
+  <text x="40" y="52" fill="#E5E7EB" font-size="26" font-weight="700">DualContext — Dual-MCP Incident Investigation</text>
+  <text x="40" y="78" fill="#8B949E" font-size="15">Splunk Agentic Ops Hackathon · Platform &amp; Developer Experience — one query, two MCP servers, one grounded answer</text>
+
+  <!-- developer query -->
+  <rect x="440" y="104" width="360" height="58" rx="10" fill="#151820" stroke="#2A3347"/>
+  <text x="620" y="130" fill="#E5E7EB" font-size="15" font-weight="600" text-anchor="middle">Developer question (natural language)</text>
+  <text x="620" y="150" fill="#8B949E" font-size="12" text-anchor="middle">“Auth service throwing 47 errors per hour. What’s causing it?”</text>
+
+  <!-- parallel fan-out arrows -->
+  <line x1="520" y1="162" x2="320" y2="200" stroke="#FF9500" stroke-width="2" marker-end="url(#aG)"/>
+  <line x1="720" y1="162" x2="920" y2="200" stroke="#1D9E75" stroke-width="2" marker-end="url(#aT)"/>
+  <text x="600" y="186" fill="#8B949E" font-size="11" text-anchor="middle">parallel · ThreadPoolExecutor</text>
+
+  <!-- Splunk MCP -->
+  <rect x="80" y="200" width="440" height="150" rx="12" fill="#0E1A12" stroke="#1E5E34"/>
+  <text x="300" y="228" fill="#65E075" font-size="16" font-weight="700" text-anchor="middle">Splunk MCP Server</text>
+  <text x="300" y="248" fill="#8B949E" font-size="11.5" text-anchor="middle">Splunkbase App 7931 · token auth · handshake</text>
+  <rect x="104" y="262" width="392" height="72" rx="8" fill="#10231A" stroke="#1E5E34"/>
+  <text x="300" y="286" fill="#E5E7EB" font-size="13" font-weight="600" text-anchor="middle" class="">run_splunk_query × 3 (SPL)</text>
+  <text x="300" y="306" fill="#8B949E" font-size="11.5" text-anchor="middle">errors · error-rate timechart · alert history</text>
+  <text x="300" y="324" fill="#8B949E" font-size="11.5" text-anchor="middle">→ operational reality: which line, how many, when</text>
+
+  <!-- SigMap MCP -->
+  <rect x="720" y="200" width="440" height="150" rx="12" fill="#0E1A17" stroke="#1D9E75"/>
+  <text x="940" y="228" fill="#6fe6bf" font-size="16" font-weight="700" text-anchor="middle">SigMap MCP Server</text>
+  <text x="940" y="248" fill="#8B949E" font-size="11.5" text-anchor="middle">v7.0.0 · stdio · npx sigmap --mcp</text>
+  <rect x="744" y="262" width="392" height="72" rx="8" fill="#0E211B" stroke="#1D9E75"/>
+  <text x="940" y="286" fill="#E5E7EB" font-size="13" font-weight="600" text-anchor="middle">query_context(query, topK)</text>
+  <text x="940" y="306" fill="#8B949E" font-size="11.5" text-anchor="middle">ranked files + signatures · ~97% fewer tokens</text>
+  <text x="940" y="324" fill="#8B949E" font-size="11.5" text-anchor="middle">→ code structure: which file, which method</text>
+
+  <!-- merge arrows -->
+  <line x1="300" y1="350" x2="560" y2="406" stroke="#65E075" stroke-width="2" marker-end="url(#aG)"/>
+  <line x1="940" y1="350" x2="680" y2="406" stroke="#1D9E75" stroke-width="2" marker-end="url(#aT)"/>
+
+  <!-- synthesis -->
+  <rect x="360" y="408" width="520" height="96" rx="12" fill="#11151F" stroke="#0A84FF"/>
+  <text x="620" y="436" fill="#0A84FF" font-size="16" font-weight="700" text-anchor="middle">Splunk Hosted Model — gpt-oss-120b</text>
+  <text x="620" y="460" fill="#C9D2E0" font-size="12.5" text-anchor="middle">fuses operational + code context into one answer</text>
+  <text x="620" y="480" fill="#C9D2E0" font-size="12.5" text-anchor="middle"><tspan fill="#8B5CF6">groundedness()</tspan> scores the answer 0–1 (LLM-as-judge)</text>
+  <text x="620" y="497" fill="#8B949E" font-size="11.5" text-anchor="middle">prompt forbids answering from general knowledge</text>
+
+  <line x1="620" y1="504" x2="620" y2="536" stroke="#0A84FF" stroke-width="2" marker-end="url(#aG)"/>
+
+  <!-- grounded answer -->
+  <rect x="360" y="538" width="520" height="74" rx="12" fill="#0E1A12" stroke="#34C759"/>
+  <text x="620" y="564" fill="#34C759" font-size="15" font-weight="700" text-anchor="middle">Grounded answer · groundedness 0.83 PASS</text>
+  <text x="620" y="586" fill="#C9D2E0" font-size="12" text-anchor="middle">cites JwtTokenProvider.validateToken() (line 47) AND the Splunk error spike</text>
+  <text x="620" y="603" fill="#8B949E" font-size="11.5" text-anchor="middle">specific file + specific error + root cause + fix</text>
+
+  <!-- telemetry to splunk (analytics) -->
+  <line x1="880" y1="575" x2="1030" y2="575" stroke="#5A6B8C" stroke-width="2" stroke-dasharray="5,4" marker-end="url(#aD)"/>
+  <rect x="1030" y="536" width="170" height="78" rx="10" fill="#151820" stroke="#2A3347"/>
+  <text x="1115" y="562" fill="#E5E7EB" font-size="12.5" font-weight="600" text-anchor="middle">Telemetry → HEC</text>
+  <text x="1115" y="582" fill="#8B949E" font-size="11" text-anchor="middle">dualcontext_investigation</text>
+  <text x="1115" y="600" fill="#8B949E" font-size="11" text-anchor="middle">→ analytics dashboard</text>
+
+  <!-- prize surface -->
+  <rect x="80" y="372" width="220" height="40" rx="8" fill="#0E1622" stroke="#163049"/>
+  <text x="92" y="397" fill="#FF9500" font-size="11.5">Best Use of MCP Server</text>
+  <rect x="80" y="420" width="220" height="40" rx="8" fill="#0E1622" stroke="#163049"/>
+  <text x="92" y="445" fill="#8B5CF6" font-size="11.5">Best Use of Hosted Models</text>
+
+  <text x="40" y="660" fill="#5A6B8C" font-size="12">Air-gapped demo: DUALCONTEXT_DEMO=1 (default) runs the full dual-MCP loop offline. Live: DEMO=0 + Splunk MCP token + SigMap in the codebase.</text>
+  <text x="40" y="682" fill="#5A6B8C" font-size="12">© 2026 LearnHubPlay BV · Manoj Mallick · MIT License</text>
+</svg>

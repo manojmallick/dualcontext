@@ -1,0 +1,19 @@
+{
+  "_comment": "DualContext wires two MCP servers. Splunk (operational) + SigMap (code). Production Splunk path is the Splunkbase MCP Server (App ID 7931, token auth; OAuth in Controlled Availability). The standalone server below is for a local, runnable demo.",
+  "mcpServers": {
+    "splunk": {
+      "command": "python",
+      "args": ["-m", "splunk_mcp_server", "--transport", "stdio"],
+      "env": {
+        "SPLUNK_HOST": "localhost",
+        "SPLUNK_PORT": "8089",
+        "SPLUNK_TOKEN": "${SPLUNK_TOKEN}"
+      }
+    },
+    "sigmap": {
+      "command": "npx",
+      "args": ["sigmap", "--mcp"],
+      "workingDirectory": "/path/to/codebase"
+    }
+  }
+}

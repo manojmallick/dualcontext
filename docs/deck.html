@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>DualContext — Pitch Deck</title>
+<style>
+  @page { size: 13.333in 7.5in; margin: 0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root{
+    --bg:#0B0D12; --surface:#151820; --card:#1C2030; --border:#2A3347;
+    --green:#65E075; --teal:#1D9E75; --good:#34C759; --amber:#FF9500; --poor:#FF3B30;
+    --blue:#0A84FF; --violet:#8B5CF6; --text:#E5E7EB; --muted:#8B949E;
+  }
+  html,body{ background:var(--bg); color:var(--text);
+    font-family:Inter,-apple-system,Segoe UI,Roboto,sans-serif;
+    -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  .slide{ width:13.333in; height:7.5in; padding:0.8in 0.85in 0.95in;
+    position:relative; overflow:hidden; page-break-after:always;
+    display:flex; flex-direction:column; justify-content:center; }
+  .slide:last-child{ page-break-after:auto; }
+  .head{ flex:0 0 auto; margin-bottom:6px; }
+  .body{ flex:1 1 auto; display:flex; flex-direction:column; justify-content:center; }
+  .kicker{ color:var(--green); font-weight:700; letter-spacing:.14em;
+    text-transform:uppercase; font-size:13px; margin-bottom:14px; }
+  h1{ font-size:62px; line-height:1.03; letter-spacing:-1.5px; }
+  h2{ font-size:40px; line-height:1.08; letter-spacing:-.6px; margin-bottom:8px; }
+  .sub{ color:var(--muted); font-size:20px; margin-top:14px; }
+  .mono{ font-family:"SF Mono",ui-monospace,Menlo,monospace; }
+  .foot{ position:absolute; bottom:.45in; left:.85in; right:.85in;
+    display:flex; justify-content:space-between; color:var(--muted);
+    font-size:12px; border-top:1px solid var(--border); padding-top:10px; }
+  .pill{ display:inline-block; padding:5px 12px; border-radius:999px;
+    border:1px solid var(--border); font-size:13px; margin:4px 6px 0 0;
+    color:var(--text); background:var(--surface); }
+  .pill.g{ border-color:var(--green); color:var(--green); }
+  .pill.t{ border-color:var(--teal); color:#6fe6bf; }
+  .pill.a{ border-color:var(--amber); color:var(--amber); }
+  .pill.v{ border-color:var(--violet); color:#c4b5fd; }
+  .grid{ display:grid; gap:16px; margin-top:8px; }
+  .g2{ grid-template-columns:1fr 1fr; } .g3{ grid-template-columns:1fr 1fr 1fr; }
+  .card{ background:var(--card); border:1px solid var(--border);
+    border-radius:14px; padding:20px 22px; }
+  .card h3{ font-size:18px; margin-bottom:8px; }
+  .card p{ color:var(--muted); font-size:15px; line-height:1.45; }
+  .big{ font-size:46px; font-weight:800; letter-spacing:-1px; }
+  .green{color:var(--green)} .teal{color:#6fe6bf} .good{color:var(--good)} .amber{color:var(--amber)}
+  .poor{color:var(--poor)} .blue{color:var(--blue)} .violet{color:#c4b5fd}
+  table{ width:100%; border-collapse:collapse; margin-top:10px; font-size:15px; }
+  th,td{ text-align:left; padding:9px 12px; border-bottom:1px solid var(--border); }
+  th{ color:var(--green); font-size:12px; text-transform:uppercase; letter-spacing:.08em; }
+  .term{ background:#06080c; border:1px solid var(--border); border-radius:12px;
+    padding:18px 20px; font-family:"SF Mono",ui-monospace,Menlo,monospace;
+    font-size:14px; line-height:1.7; }
+  .flow{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:18px; }
+  .step{ background:var(--surface); border:1px solid var(--border);
+    border-radius:10px; padding:12px 14px; font-size:14px; }
+  .step b{ display:block; color:var(--green); font-size:12px; letter-spacing:.06em; }
+  .arrow{ color:var(--muted); font-size:20px; }
+  .center{ justify-content:center; align-items:center; text-align:center; }
+  .logo{ width:42px; height:42px; border-radius:10px;
+    background:linear-gradient(135deg,var(--green),var(--teal));
+    display:inline-flex; align-items:center; justify-content:center;
+    color:#06251a; font-weight:900; font-size:24px; vertical-align:middle; }
+  ul{ margin-left:20px; margin-top:8px; } li{ margin:7px 0; font-size:17px; }
+  .arch{ display:flex; flex-direction:column; align-items:center; gap:10px; margin-top:6px; }
+  .node{ background:var(--surface); border:1px solid var(--border); border-radius:12px;
+    padding:13px 22px; font-size:16px; text-align:center; min-width:6.2in; }
+  .node .mono{ font-size:15px; }
+  .node small{ display:block; color:var(--muted); font-size:12.5px; margin-top:3px; }
+  .varrow{ color:var(--green); font-size:20px; line-height:1; }
+  .dual{ display:flex; gap:16px; justify-content:center; width:100%; }
+  .dual .node{ min-width:0; flex:1 1 0; }
+  .agentbox{ border:1.5px solid var(--green); border-radius:14px; padding:16px 22px 18px;
+    background:rgba(101,224,117,.05); min-width:7.2in; position:relative; margin-top:4px; }
+  .agentlabel{ position:absolute; top:-11px; left:50%; transform:translateX(-50%);
+    background:var(--bg); padding:0 12px; color:var(--green); font-weight:700;
+    font-size:13px; letter-spacing:.06em; }
+  .agentrow{ font-size:15.5px; padding:6px 0; display:flex; gap:10px; align-items:baseline;
+    border-bottom:1px solid rgba(42,51,71,.6); }
+  .agentrow:last-child{ border-bottom:0; }
+  .agentrow b{ flex:0 0 1.9in; color:var(--green); font-size:13px; letter-spacing:.04em; }
+</style>
+</head>
+<body>
+
+<!-- 1 · TITLE -->
+<section class="slide center">
+  <div class="kicker">Splunk Agentic Ops Hackathon · Platform &amp; Developer Experience</div>
+  <h1><span class="logo">D</span> DualContext</h1>
+  <div class="sub" style="font-size:26px; max-width:9.4in;">
+    Production incident. Two contexts. One answer.<br><span class="green">45 seconds, not 13 minutes.</span></div>
+  <div style="margin-top:26px;">
+    <span class="pill a">Splunk MCP</span>
+    <span class="pill t">SigMap MCP</span>
+    <span class="pill v">Hosted Models</span>
+    <span class="pill g">Groundedness-scored</span>
+  </div>
+  <div class="sub" style="margin-top:24px; font-size:17px;">Manoj Mallick&nbsp; ·&nbsp; <span class="green">LearnHubPlay BV</span></div>
+  <div class="foot"><span>DualContext — Operational reality + code structure, fused</span><span>github.com/manojmallick/dualcontext</span></div>
+</section>
+
+<!-- 2 · PROBLEM -->
+<section class="slide">
+  <div class="kicker">The Problem</div>
+  <h2>Incidents need <span class="poor">two</span> kinds of context</h2>
+  <div class="sub">When production breaks, a developer needs operational reality <b>and</b> code structure — and today they live in two different tools.</div>
+  <div class="grid g3" style="margin-top:34px;">
+    <div class="card"><div class="big green">Splunk</div><h3>knows the symptom</h3><p>47 errors, line 47, 8× baseline — but not <i>which file or method</i> owns it.</p></div>
+    <div class="card"><div class="big teal">IDE</div><h3>knows the code</h3><p>The class and method — but not <i>which error</i> is firing in production right now.</p></div>
+    <div class="card"><div class="big amber">13 min</div><h3>tab-switching</h3><p>Average investigation, alt-tabbing between dashboard and editor. Mental overhead.</p></div>
+  </div>
+  <div class="sub" style="margin-top:30px;">Neither source alone is sufficient. <span class="green">Together they pinpoint both.</span></div>
+  <div class="foot"><span>The Problem</span><span>2 / 10</span></div>
+</section>
+
+<!-- 3 · SOLUTION -->
+<section class="slide">
+  <div class="kicker">The Solution</div>
+  <h2>One query, <span class="green">two MCP servers</span></h2>
+  <div class="sub">DualContext fans one developer question out to two MCP servers in parallel, then a Splunk hosted model fuses the answer.</div>
+  <div class="flow">
+    <div class="step"><b>ASK</b>one NL question</div><span class="arrow">→</span>
+    <div class="step"><b>SPLUNK MCP</b>errors · metrics · alerts</div><span class="arrow">+</span>
+    <div class="step"><b>SIGMAP MCP</b>ranked files · methods</div><span class="arrow">→</span>
+    <div class="step"><b>SYNTHESIZE</b>hosted model</div><span class="arrow">→</span>
+    <div class="step"><b>JUDGE</b>groundedness 0–1</div>
+  </div>
+  <div class="grid g2" style="margin-top:34px;">
+    <div class="card"><h3 class="green">Single-source tools stop here</h3><p>“Here are your logs.” Or: “here’s your code.” The developer still has to bridge the two by hand.</p></div>
+    <div class="card" style="border-color:var(--green)"><h3 class="green">DualContext bridges them</h3><p>Cites a specific log <i>and</i> a specific file+method in one grounded answer — scored for groundedness every time.</p></div>
+  </div>
+  <div class="foot"><span>The Solution</span><span>3 / 10</span></div>
+</section>
+
+<!-- 4 · SPLUNK CAPABILITIES -->
+<section class="slide">
+  <div class="kicker">How we use Splunk</div>
+  <h2>The MCP Server is the protagonist</h2>
+  <table>
+    <tr><th>Capability</th><th>How DualContext uses it</th><th>Prize</th></tr>
+    <tr><td class="amber"><b>MCP Server</b></td><td>Primary integration — operational context via <span class="mono">run_splunk_query</span> (handshake, Bearer auth)</td><td class="amber">Best Use of MCP</td></tr>
+    <tr><td class="violet"><b>Hosted Models</b></td><td><span class="mono">gpt-oss</span> synthesizes both contexts into one grounded answer</td><td class="violet">Best Use of Models</td></tr>
+    <tr><td><b>SPL</b></td><td>Errors, error-rate timechart, alert history — three searches per query</td><td>Core</td></tr>
+    <tr><td class="teal"><b>SigMap MCP</b></td><td>Second MCP server — ranked code structure at ~97% token reduction</td><td>Composability</td></tr>
+  </table>
+  <div class="sub" style="margin-top:24px;">MCP as an <b>interop layer</b> — exactly what Splunk is promoting. Splunk does the heavy lifting; SigMap adds the code lens.</div>
+  <div class="foot"><span>Splunk Capabilities</span><span>4 / 10</span></div>
+</section>
+
+<!-- 5 · PROOF -->
+<section class="slide">
+  <div class="kicker">Proof — runnable, scored</div>
+  <h2>Grounded answer in <span class="green">~1 second</span></h2>
+  <div class="sub">Two MCP servers in parallel, fused and judged — query: <i>“Auth service throwing 47 errors per hour. What’s causing it?”</i></div>
+  <div class="term" style="margin-top:18px;">
+    <span class="amber">SPLUNK MCP</span> · 3 SPL searches, 47 events (1061 ms)<br>
+    <span class="teal">SIGMAP MCP</span> · ranked 3 files, 180 tokens vs 45000 raw (<b>99.6% reduction</b>)<br>
+    <span class="green">PARALLEL</span>   · both ready in 1061 ms (not 1862 ms serial)<br>
+    <span class="violet">SYNTHESIS</span> · gpt-oss-120b fused both sources<br>
+    <span class="good">JUDGE</span>      · groundedness <b class="good">0.83 PASS</b> (threshold 0.7)
+  </div>
+  <div class="sub" style="margin-top:14px;">Answer cites <span class="mono">JwtTokenProvider.validateToken()</span> (line 47) <i>and</i> the Splunk error spike — both, in one paragraph.</div>
+  <div class="foot"><span>Proof</span><span>5 / 10</span></div>
+</section>
+
+<!-- 6 · METRIC -->
+<section class="slide">
+  <div class="kicker">The groundedness guarantee</div>
+  <h2>Every answer is scored</h2>
+  <div class="sub">A groundedness judge scores how well the answer cites the actual files/methods — no silent hallucination.</div>
+  <div class="grid g2" style="margin-top:40px;">
+    <div class="card" style="border-color:var(--good)"><div class="kicker">With both contexts</div><div class="big good">0.83</div><p>Cites the specific log <b>and</b> the specific file+method. PASS.</p></div>
+    <div class="card" style="border-color:var(--poor)"><div class="kicker">Generic answer</div><div class="big poor">0.15</div><p>“Spring Security typically uses…” — no codebase grounding. FAIL.</p></div>
+  </div>
+  <div class="sub" style="margin-top:36px;">The developer sees the score with <b>every</b> response. <span class="green">Trust, made visible.</span></div>
+  <div class="foot"><span>Groundedness</span><span>6 / 10</span></div>
+</section>
+
+<!-- 7 · ARCHITECTURE -->
+<section class="slide">
+  <div class="head">
+    <div class="kicker">Architecture</div>
+    <h2>One query · dual MCP · fused answer</h2>
+  </div>
+  <div class="body">
+    <div class="arch">
+      <div class="node">Developer question — natural language
+        <small>“Auth service throwing 47 errors per hour. What’s causing it?”</small></div>
+      <div class="varrow">▼</div>
+      <div class="dual">
+        <div class="node" style="border-color:var(--amber)"><b class="amber">Splunk MCP Server</b>
+          <small>run_splunk_query · errors · metrics · alerts</small></div>
+        <div class="node" style="border-color:var(--teal)"><b class="teal">SigMap MCP Server</b>
+          <small>query_context · ranked files · 99.6% fewer tokens</small></div>
+      </div>
+      <div class="varrow">▼</div>
+      <div class="agentbox">
+        <div class="agentlabel">DualContext Agent</div>
+        <div class="agentrow"><b>PARALLEL</b><span>both MCP servers queried concurrently — real wall-clock win</span></div>
+        <div class="agentrow"><b>SYNTHESIZE</b><span><span class="violet">Splunk hosted model</span> fuses operational + code context</span></div>
+        <div class="agentrow"><b>JUDGE</b><span>groundedness scored 0–1 · shown with every answer</span></div>
+      </div>
+      <div class="varrow">▼</div>
+      <div class="node">Grounded answer — specific log + specific file/method + fix</div>
+    </div>
+  </div>
+  <div class="foot"><span>Architecture</span><span>7 / 10</span></div>
+</section>
+
+<!-- 8 · WHY IT WINS -->
+<section class="slide">
+  <div class="kicker">Why it wins</div>
+  <h2>Judged on four criteria</h2>
+  <div class="grid g2" style="margin-top:18px;">
+    <div class="card"><h3 class="green">Technological Implementation</h3><p>Two real MCP servers composed, hosted-model synthesis, parallel execution, groundedness scoring. Runs in ~1s.</p></div>
+    <div class="card"><h3 class="green">Quality of the Idea</h3><p>Dual-MCP fusion — the most architecturally sophisticated way to use Splunk’s MCP Server as an interop layer.</p></div>
+    <div class="card"><h3 class="green">Potential Impact</h3><p>Every developer investigates incidents. 13 min → 45 s, with a groundedness guarantee on every answer.</p></div>
+    <div class="card"><h3 class="green">Design</h3><p>Dual-source investigation UI — Splunk green + SigMap teal, evidence panels, groundedness badge.</p></div>
+  </div>
+  <div class="sub" style="margin-top:22px;">Squarely on the <b class="green">Platform &amp; DevEx</b> mandate: <i>simplify Splunk interactions.</i></div>
+  <div class="foot"><span>Why It Wins</span><span>8 / 10</span></div>
+</section>
+
+<!-- 9 · THE THESIS -->
+<section class="slide">
+  <div class="kicker">Why neither source alone is enough</div>
+  <h2>Splunk + code, or you’re guessing</h2>
+  <div class="grid g3" style="margin-top:30px;">
+    <div class="card"><h3 class="amber">Splunk alone</h3><p>“NullPointerException at line 47” — <i>which file?</i> You still open the IDE.</p></div>
+    <div class="card"><h3 class="teal">SigMap alone</h3><p>“JwtTokenProvider.validateToken()” — <i>which error, when?</i> You still open Splunk.</p></div>
+    <div class="card" style="border-color:var(--green)"><h3 class="green">Together</h3><p>Specific file + specific error + root cause + fix. One grounded answer, scored.</p></div>
+  </div>
+  <div class="sub" style="margin-top:34px;">In the demo incident, <b class="green">neither source alone was sufficient</b> — Splunk had the line, SigMap had the method; only together did they pinpoint the bug.</div>
+  <div class="foot"><span>The Thesis</span><span>9 / 10</span></div>
+</section>
+
+<!-- 10 · CLOSE -->
+<section class="slide center">
+  <div class="kicker">Two contexts. One answer.</div>
+  <h1>DualContext</h1>
+  <div class="sub" style="font-size:24px;">Splunk MCP + SigMap MCP, fused by a Splunk hosted model. Grounded, every time.</div>
+  <div style="margin-top:24px;">
+    <span class="pill a">Splunk MCP</span><span class="pill t">SigMap MCP</span>
+    <span class="pill v">Hosted Models</span><span class="pill g">Groundedness</span>
+    <span class="pill">SPL</span>
+  </div>
+  <div class="sub mono" style="margin-top:30px; color:var(--green);">github.com/manojmallick/dualcontext</div>
+  <div class="foot"><span>Built on Splunk · Platform &amp; DevEx Track</span><span>10 / 10</span></div>
+</section>
+
+</body>
+</html>
