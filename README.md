@@ -142,6 +142,8 @@ token auth (OAuth in Controlled Availability). Local demo path: the standalone
 
 ## Architecture
 
+![DualContext — one query · dual MCP · fused answer](architecture_diagram.png)
+
 ```
             developer query
                   │
