@@ -14,3 +14,8 @@ __pycache__/
 
 # demo video — upload to YouTube, not the repo
 *.mp4
+
+# Internal prep — not for the public repo / judges
+DEMO_SCRIPT.md
+YOUTUBE.md
+SUBMISSION.md
