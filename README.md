@@ -145,4 +145,4 @@ values, not aggregate production metrics.
 **DualContext** · Splunk MCP + SigMap MCP · built for the Splunk Agentic Ops Hackathon
 · [github.com/manojmallick/dualcontext](https://github.com/manojmallick/dualcontext)
 
-*© 2026 LearnHubPlay BV — Manoj Mallick · MIT License*
+*© 2026 Manoj Mallick · MIT License*

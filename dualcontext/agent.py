@@ -1,4 +1,4 @@
-# © 2026 LearnHubPlay BV. DualContext.
+# © 2026 Manoj Mallick. DualContext.
 """The DualContext Agent — the dual-MCP core.
 
 One developer query fans out to TWO MCP servers in parallel:

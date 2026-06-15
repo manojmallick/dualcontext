@@ -1,4 +1,4 @@
-# © 2026 LearnHubPlay BV. DualContext.
+# © 2026 Manoj Mallick. DualContext.
 """Synthesis layer — combines both contexts with a Splunk hosted model.
 
 The two MCP servers each return half the picture. A Splunk hosted model

@@ -1,4 +1,4 @@
-# © 2026 LearnHubPlay BV. DualContext — runnable end-to-end demo.
+# © 2026 Manoj Mallick. DualContext — runnable end-to-end demo.
 """Run the full DualContext dual-MCP investigation with zero network access.
 
     python demo.py
@@ -6,7 +6,7 @@
 
 It fans a developer question out to the (simulated) Splunk MCP Server and the
 (simulated) SigMap MCP Server in parallel, fuses both with a Splunk hosted model
-(gpt-oss-120b), and scores the answer's groundedness with the SigMap judge.
+(gpt-oss-120b), and scores the answer's groundedness with that hosted model.
 No Splunk instance, API key, or codebase required — DUALCONTEXT_DEMO=1 default.
 """
 

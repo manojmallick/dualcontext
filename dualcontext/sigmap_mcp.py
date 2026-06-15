@@ -1,4 +1,4 @@
-# © 2026 LearnHubPlay BV. DualContext.
+# © 2026 Manoj Mallick. DualContext.
 """SigMap MCP Server client — the CODE half of DualContext.
 
 SigMap (https://github.com/manojmallick/sigmap) runs as an MCP server over

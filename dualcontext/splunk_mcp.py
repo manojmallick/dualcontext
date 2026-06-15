@@ -1,4 +1,4 @@
-# © 2026 LearnHubPlay BV. DualContext.
+# © 2026 Manoj Mallick. DualContext.
 """Splunk MCP Server client — the OPERATIONAL half of DualContext.
 
 The agent reads operational reality from Splunk through the Splunk MCP Server

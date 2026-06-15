@@ -1,4 +1,4 @@
-# © 2026 LearnHubPlay BV. DualContext.
+# © 2026 Manoj Mallick. DualContext.
 """Configuration. All secrets come from the environment — never hardcoded."""
 
 from __future__ import annotations

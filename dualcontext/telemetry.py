@@ -1,4 +1,4 @@
-# © 2026 LearnHubPlay BV. DualContext.
+# © 2026 Manoj Mallick. DualContext.
 """Investigation telemetry → Splunk HEC (optional, env-only).
 
 DualContext *reads* operational reality from Splunk via the MCP Server. This

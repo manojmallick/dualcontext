@@ -1,4 +1,4 @@
-# © 2026 LearnHubPlay BV. DualContext — end-to-end test.
+# © 2026 Manoj Mallick. DualContext — end-to-end test.
 """End-to-end checks for DualContext. Run: python e2e_test.py
 
   TEST 1  Offline demo pipeline (no network)  — always runs.
