@@ -11,3 +11,6 @@
 __pycache__/
 *.pyc
 .venv/
+
+# demo video — upload to YouTube, not the repo
+*.mp4
