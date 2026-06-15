@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DualContext — Incident Investigation</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<script>
+  tailwind.config = {
+    theme: { extend: { colors: {
+      bg: '#0B0D12', surface: '#151820', card: '#1C2030', edge: '#2A3347',
+      splunk: '#65E075', sigmap: '#1D9E75', ink: '#E5E7EB', muted: '#8b93a1',
+    },
+    fontFamily: { sans: ['Inter','sans-serif'], mono: ['JetBrains Mono','monospace'] } } }
+  }
+</script>
+<style>
+  body { background:#0B0D12; color:#E5E7EB; font-family:'Inter',sans-serif; }
+  .mono { font-family:'JetBrains Mono',monospace; }
+  .gradline { border-image: linear-gradient(180deg,#65E075,#1D9E75) 1; }
+  .gbtn { background-image: linear-gradient(90deg,#65E075,#1D9E75); }
+  @keyframes shimmer { 0%{transform:translateX(-100%)} 100%{transform:translateX(300%)} }
+  .bar-fill::after { content:''; position:absolute; inset:0; width:40%;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.45),transparent);
+    animation:shimmer 1.1s infinite; }
+  .dot { width:8px; height:8px; border-radius:9999px; display:inline-block; }
+  details>summary { list-style:none; cursor:pointer; } details>summary::-webkit-details-marker{display:none}
+</style>
+</head>
+<body class="min-h-screen">
+<div class="max-w-5xl mx-auto px-6 py-7">
+
+  <!-- HEADER -->
+  <header class="flex items-center justify-between mb-6">
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-lg gbtn flex items-center justify-center font-extrabold text-bg">D</div>
+      <div>
+        <h1 class="text-xl font-bold leading-tight">DualContext <span class="text-muted font-medium">— Incident Investigation</span></h1>
+        <p class="text-xs text-muted">Operational reality + code structure, fused</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-2 text-xs font-semibold">
+      <span class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-card border border-edge">
+        <span class="dot bg-splunk" style="box-shadow:0 0 8px #65E075"></span>Splunk MCP · CONNECTED</span>
+      <span class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-card border border-edge">
+        <span class="dot bg-sigmap" style="box-shadow:0 0 8px #1D9E75"></span>SigMap MCP · CONNECTED</span>
+    </div>
+  </header>
+
+  <!-- QUERY -->
+  <section class="bg-surface border border-edge rounded-xl p-4 mb-3">
+    <div class="flex items-center gap-3">
+      <input id="q" class="flex-1 bg-bg border border-edge rounded-lg px-4 py-3 text-sm mono
+        text-ink placeholder:text-muted focus:outline-none focus:border-splunk"
+        value="Auth service throwing 47 errors per hour. What's causing it?"
+        placeholder="Describe the incident or ask about production behavior…"/>
+      <button id="go" class="gbtn text-bg font-bold text-sm px-5 py-3 rounded-lg hover:opacity-90 transition">Investigate →</button>
+    </div>
+    <p class="text-xs text-muted mt-2 pl-1">Queries both Splunk and your codebase simultaneously — two MCP servers, one answer.</p>
+  </section>
+
+  <!-- PARALLEL STATUS (during run) -->
+  <section id="status" class="hidden grid grid-cols-2 gap-3 mb-3">
+    <div class="bg-card border border-edge rounded-xl p-4">
+      <div class="flex items-center justify-between text-xs font-semibold mb-2"><span class="text-splunk">Splunk MCP</span><span class="text-muted">searching errors · metrics · alerts</span></div>
+      <div class="relative h-2 rounded-full bg-bg overflow-hidden"><div class="bar-fill absolute inset-0 bg-splunk/30"></div></div>
+    </div>
+    <div class="bg-card border border-edge rounded-xl p-4">
+      <div class="flex items-center justify-between text-xs font-semibold mb-2"><span class="text-sigmap">SigMap MCP</span><span class="text-muted">ranking codebase signatures</span></div>
+      <div class="relative h-2 rounded-full bg-bg overflow-hidden"><div class="bar-fill absolute inset-0 bg-sigmap/30"></div></div>
+    </div>
+  </section>
+
+  <!-- RESULT -->
+  <section id="result">
+    <!-- combined answer -->
+    <div class="bg-surface rounded-xl p-5 mb-3 border-l-4 gradline border-y border-r border-edge">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="font-bold text-lg">DualContext Investigation Result</h2>
+        <div class="flex items-center gap-2 text-xs font-semibold">
+          <span class="px-3 py-1.5 rounded-full" style="background:rgba(101,224,117,.12);color:#65E075">Groundedness 0.83 · PASS</span>
+          <span class="px-3 py-1.5 rounded-full bg-card border border-edge text-muted">1.1s <span class="opacity-60">vs ~13 min manual</span></span>
+        </div>
+      </div>
+
+      <div class="space-y-3 text-sm leading-relaxed">
+        <div>
+          <div class="flex items-center gap-2 font-semibold text-splunk mb-1"><span class="dot bg-splunk"></span>Splunk shows</div>
+          <p class="text-ink/90 pl-4">47 NullPointerException in the last hour (first 10:17:33 CET), service <span class="mono">auth-service</span>, error rate <b>8× baseline</b>. Stack trace at <span class="mono">JwtTokenProvider:47</span>.</p>
+        </div>
+        <div>
+          <div class="flex items-center gap-2 font-semibold text-sigmap mb-1"><span class="dot bg-sigmap"></span>Code context (SigMap)</div>
+          <p class="text-ink/90 pl-4"><span class="mono">JwtTokenProvider.java</span> — <span class="mono">validateToken()</span> calls <span class="mono">getUsernameFromToken()</span>, which may return <b>null</b> for malformed tokens.</p>
+        </div>
+        <div>
+          <div class="font-semibold text-ink mb-1">Root cause</div>
+          <p class="text-ink/90 pl-4">A recent change removed the null guard before <span class="mono">token.getSubject()</span>; <span class="mono">validateToken()</span> then dereferences a null subject.</p>
+        </div>
+        <div>
+          <div class="font-semibold text-splunk mb-1">Recommended fix</div>
+          <p class="text-ink/90 pl-4">Add a null check in <span class="mono">validateToken()</span> at line 47 of <span class="mono">src/auth/JwtTokenProvider.java</span> before using the subject.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- two source panels -->
+    <div class="grid grid-cols-2 gap-3">
+      <!-- Splunk -->
+      <div class="bg-card border border-edge rounded-xl overflow-hidden">
+        <div class="flex items-center justify-between px-4 py-3 border-b border-edge" style="background:rgba(101,224,117,.06)">
+          <span class="font-semibold text-splunk flex items-center gap-2"><span class="dot bg-splunk"></span>Splunk Data</span>
+          <span class="text-xs text-muted mono">App 7931 · MCP</span>
+        </div>
+        <div class="p-4 space-y-2 text-xs">
+          <p class="text-muted">847 events analyzed · 3 SPL searches via <span class="mono text-ink">run_splunk_query</span></p>
+          <div class="mono bg-bg rounded-md p-2 text-ink/80 leading-relaxed">search index=main service=auth level=ERROR<br/>earliest=-1h | head 20 | stats count by message,line</div>
+          <div class="space-y-1 pt-1">
+            <div class="flex justify-between"><span class="mono text-ink/80">NPE @ JwtTokenProvider:47</span><span class="text-splunk">×23</span></div>
+            <div class="flex justify-between"><span class="mono text-ink/80">NPE @ JwtTokenProvider:47</span><span class="text-splunk">×14</span></div>
+            <div class="flex justify-between"><span class="mono text-ink/80">NPE @ JwtTokenProvider:47</span><span class="text-splunk">×10</span></div>
+          </div>
+        </div>
+      </div>
+      <!-- SigMap -->
+      <div class="bg-card border border-edge rounded-xl overflow-hidden">
+        <div class="flex items-center justify-between px-4 py-3 border-b border-edge" style="background:rgba(29,158,117,.06)">
+          <span class="font-semibold text-sigmap flex items-center gap-2"><span class="dot bg-sigmap"></span>SigMap Context</span>
+          <span class="text-xs text-muted mono">v7.0.0 · query_context</span>
+        </div>
+        <div class="p-4 space-y-2 text-xs">
+          <div class="space-y-2">
+            <div><div class="flex justify-between mb-1"><span class="mono text-ink/80">JwtTokenProvider.java</span><span class="text-sigmap font-semibold">0.91</span></div><div class="h-1.5 rounded-full bg-bg overflow-hidden"><div class="h-full bg-sigmap" style="width:91%"></div></div></div>
+            <div><div class="flex justify-between mb-1"><span class="mono text-ink/80">SecurityConfig.java</span><span class="text-sigmap font-semibold">0.73</span></div><div class="h-1.5 rounded-full bg-bg overflow-hidden"><div class="h-full bg-sigmap" style="width:73%"></div></div></div>
+            <div><div class="flex justify-between mb-1"><span class="mono text-ink/80">JwtAuthFilter.java</span><span class="text-sigmap font-semibold">0.68</span></div><div class="h-1.5 rounded-full bg-bg overflow-hidden"><div class="h-full bg-sigmap" style="width:68%"></div></div></div>
+          </div>
+          <div class="pt-2 border-t border-edge flex items-center justify-between">
+            <span class="text-muted">Token usage</span>
+            <span class="mono text-ink"><b class="text-sigmap">180</b> / 45,000 raw · <b class="text-sigmap">99.6%</b> ↓</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="text-center text-xs text-muted mt-7">
+    DualContext · Splunk MCP + SigMap MCP · Splunk hosted model (gpt-oss-120b) · © 2026 Manoj Mallick
+  </footer>
+</div>
+
+<script>
+  const go = document.getElementById('go');
+  const status = document.getElementById('status');
+  const result = document.getElementById('result');
+  function run() {
+    result.style.opacity = .25; status.classList.remove('hidden');
+    go.textContent = 'Investigating…'; go.disabled = true;
+    setTimeout(() => {
+      status.classList.add('hidden'); result.style.opacity = 1;
+      go.textContent = 'Investigate →'; go.disabled = false;
+    }, 1600);
+  }
+  go.addEventListener('click', run);
+</script>
+</body>
+</html>
