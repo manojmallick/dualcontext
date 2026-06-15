@@ -66,6 +66,49 @@ structure. Neither source alone is sufficient:
 
 ---
 
+## About SigMap — and why DualContext uses it
+
+**SigMap** → **[github.com/manojmallick/sigmap](https://github.com/manojmallick/sigmap)**
+(runs as an MCP server: `npx sigmap --mcp`)
+
+SigMap is an open-source **code-structure MCP server** I built. Pointed at a
+repository, it indexes the codebase into ranked *signatures* — classes, methods,
+and their relationships — and exposes them over the Model Context Protocol. Given
+a natural-language query, `query_context` returns just the handful of
+files/methods relevant to that query, with their signatures, instead of the whole
+repo.
+
+**Why DualContext needs it — the missing half.** Splunk tells you *what* broke and
+*where in the running system* (error, line, rate, service). It cannot tell you
+*which file and method* in your source owns that error. An incident answer needs
+both. SigMap supplies the code half:
+
+- **Operational reality** (Splunk MCP) → `NullPointerException at line 47, 8× baseline`
+- **Code structure** (SigMap MCP) → `JwtTokenProvider.validateToken() → getUsernameFromToken() may return null`
+- **Fused** (Splunk hosted model) → specific file + specific error + root cause + fix
+
+**Why SigMap specifically, and not "just send the repo":**
+
+1. **Token efficiency — ~97% reduction.** Shipping a whole repo to a model is
+   slow, expensive, and dilutes attention. SigMap returns only query-relevant
+   signatures (~180 tokens in the demo vs ~45k for the full codebase), which keeps
+   the Splunk hosted-model prompt small, fast, and cheap — and makes the answer
+   *more* grounded, not less.
+2. **MCP-native — clean composition.** SigMap speaks the same protocol as the
+   Splunk MCP Server, so DualContext composes *two MCP servers* behind one agent
+   with no bespoke glue. That dual-MCP composition is the core idea of this
+   submission.
+3. **Structure over text search.** It ranks by code structure and relevance, not
+   substring matching — so it surfaces the *method that returns null*, not every
+   file that mentions "token".
+
+**Honest disclosure.** SigMap is my own open-source project, used here purely as
+the code-context provider (the `query_context` tool). It does **not** score
+groundedness — that is done by the Splunk hosted model in `synthesizer.py`, so the
+Splunk capabilities remain the protagonists of this submission.
+
+---
+
 ## Run it (zero network, ~1 second)
 
 ```bash

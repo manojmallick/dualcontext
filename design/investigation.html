@@ -1,166 +1,369 @@
 <!DOCTYPE html>
-<html class="dark" lang="en">
-<head>
+
+<html class="dark" lang="en"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>DualContext — Incident Investigation</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
-<script>
-  tailwind.config = {
-    theme: { extend: { colors: {
-      bg: '#0B0D12', surface: '#151820', card: '#1C2030', edge: '#2A3347',
-      splunk: '#65E075', sigmap: '#1D9E75', ink: '#E5E7EB', muted: '#8b93a1',
-    },
-    fontFamily: { sans: ['Inter','sans-serif'], mono: ['JetBrains Mono','monospace'] } } }
-  }
-</script>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
 <style>
-  body { background:#0B0D12; color:#E5E7EB; font-family:'Inter',sans-serif; }
-  .mono { font-family:'JetBrains Mono',monospace; }
-  .gradline { border-image: linear-gradient(180deg,#65E075,#1D9E75) 1; }
-  .gbtn { background-image: linear-gradient(90deg,#65E075,#1D9E75); }
-  @keyframes shimmer { 0%{transform:translateX(-100%)} 100%{transform:translateX(300%)} }
-  .bar-fill::after { content:''; position:absolute; inset:0; width:40%;
-    background:linear-gradient(90deg,transparent,rgba(255,255,255,.45),transparent);
-    animation:shimmer 1.1s infinite; }
-  .dot { width:8px; height:8px; border-radius:9999px; display:inline-block; }
-  details>summary { list-style:none; cursor:pointer; } details>summary::-webkit-details-marker{display:none}
-</style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .accent-gradient {
+            background: linear-gradient(135deg, #82fd8e 0%, #68dbae 100%);
+        }
+        .code-well {
+            background-color: #050505;
+            border: 1px solid #2A3347;
+        }
+        .ghost-border {
+            border: 1px solid #2A3347;
+        }
+        .ghost-border:hover {
+            border-color: #9CA3AF;
+        }
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 999px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "tertiary-fixed-dim": "#feb693",
+                      "primary": "#82fd8e",
+                      "on-surface": "#dde5d8",
+                      "on-secondary-fixed": "#002115",
+                      "secondary-container": "#26a37a",
+                      "primary-fixed": "#81fc8d",
+                      "on-primary-container": "#006120",
+                      "secondary": "#68dbae",
+                      "on-tertiary-fixed-variant": "#6b3a1f",
+                      "inverse-surface": "#dde5d8",
+                      "tertiary-container": "#ffb794",
+                      "on-error": "#690005",
+                      "surface-variant": "#30372e",
+                      "error-container": "#93000a",
+                      "surface-container-lowest": "#091009",
+                      "surface": "#0e150e",
+                      "on-primary": "#003910",
+                      "secondary-fixed-dim": "#68dbae",
+                      "surface-container": "#1b211a",
+                      "tertiary-fixed": "#ffdbcb",
+                      "surface-tint": "#64df74",
+                      "on-primary-fixed": "#002106",
+                      "inverse-on-surface": "#2b322a",
+                      "on-tertiary": "#50240b",
+                      "on-tertiary-fixed": "#341100",
+                      "surface-container-highest": "#30372e",
+                      "error": "#ffb4ab",
+                      "surface-bright": "#343b33",
+                      "secondary-fixed": "#86f8c9",
+                      "outline-variant": "#3e4a3c",
+                      "primary-fixed-dim": "#64df74",
+                      "on-secondary-container": "#003121",
+                      "tertiary": "#ffdccd",
+                      "on-tertiary-container": "#7a462a",
+                      "on-primary-fixed-variant": "#00531a",
+                      "surface-dim": "#0e150e",
+                      "on-surface-variant": "#bdcab9",
+                      "outline": "#879484",
+                      "on-error-container": "#ffdad6",
+                      "on-secondary": "#003827",
+                      "on-secondary-fixed-variant": "#00513a",
+                      "on-background": "#dde5d8",
+                      "primary-container": "#65e075",
+                      "background": "#0e150e",
+                      "inverse-primary": "#006e26",
+                      "surface-container-low": "#171d16",
+                      "surface-container-high": "#252c24"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "base": "4px",
+                      "gutter": "16px",
+                      "lg": "24px",
+                      "xs": "4px",
+                      "sm": "8px",
+                      "md": "16px",
+                      "xl": "32px",
+                      "margin": "24px"
+              },
+              "fontFamily": {
+                      "body-lg": ["Inter"],
+                      "label-caps": ["Inter"],
+                      "body-sm": ["Inter"],
+                      "code-md": ["JetBrains Mono"],
+                      "code-sm": ["JetBrains Mono"],
+                      "headline-sm": ["Inter"],
+                      "headline-lg": ["Inter"],
+                      "body-md": ["Inter"],
+                      "headline-md": ["Inter"]
+              },
+              "fontSize": {
+                      "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "label-caps": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                      "body-sm": ["12px", {"lineHeight": "18px", "fontWeight": "400"}],
+                      "code-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "code-sm": ["12px", {"lineHeight": "18px", "fontWeight": "400"}],
+                      "headline-sm": ["18px", {"lineHeight": "24px", "fontWeight": "600"}],
+                      "headline-lg": ["30px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                      "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+              }
+            },
+          },
+        }
+      </script>
 </head>
-<body class="min-h-screen">
-<div class="max-w-5xl mx-auto px-6 py-7">
-
-  <!-- HEADER -->
-  <header class="flex items-center justify-between mb-6">
-    <div class="flex items-center gap-3">
-      <div class="w-9 h-9 rounded-lg gbtn flex items-center justify-center font-extrabold text-bg">D</div>
-      <div>
-        <h1 class="text-xl font-bold leading-tight">DualContext <span class="text-muted font-medium">— Incident Investigation</span></h1>
-        <p class="text-xs text-muted">Operational reality + code structure, fused</p>
-      </div>
-    </div>
-    <div class="flex items-center gap-2 text-xs font-semibold">
-      <span class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-card border border-edge">
-        <span class="dot bg-splunk" style="box-shadow:0 0 8px #65E075"></span>Splunk MCP · CONNECTED</span>
-      <span class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-card border border-edge">
-        <span class="dot bg-sigmap" style="box-shadow:0 0 8px #1D9E75"></span>SigMap MCP · CONNECTED</span>
-    </div>
-  </header>
-
-  <!-- QUERY -->
-  <section class="bg-surface border border-edge rounded-xl p-4 mb-3">
-    <div class="flex items-center gap-3">
-      <input id="q" class="flex-1 bg-bg border border-edge rounded-lg px-4 py-3 text-sm mono
-        text-ink placeholder:text-muted focus:outline-none focus:border-splunk"
-        value="Auth service throwing 47 errors per hour. What's causing it?"
-        placeholder="Describe the incident or ask about production behavior…"/>
-      <button id="go" class="gbtn text-bg font-bold text-sm px-5 py-3 rounded-lg hover:opacity-90 transition">Investigate →</button>
-    </div>
-    <p class="text-xs text-muted mt-2 pl-1">Queries both Splunk and your codebase simultaneously — two MCP servers, one answer.</p>
-  </section>
-
-  <!-- PARALLEL STATUS (during run) -->
-  <section id="status" class="hidden grid grid-cols-2 gap-3 mb-3">
-    <div class="bg-card border border-edge rounded-xl p-4">
-      <div class="flex items-center justify-between text-xs font-semibold mb-2"><span class="text-splunk">Splunk MCP</span><span class="text-muted">searching errors · metrics · alerts</span></div>
-      <div class="relative h-2 rounded-full bg-bg overflow-hidden"><div class="bar-fill absolute inset-0 bg-splunk/30"></div></div>
-    </div>
-    <div class="bg-card border border-edge rounded-xl p-4">
-      <div class="flex items-center justify-between text-xs font-semibold mb-2"><span class="text-sigmap">SigMap MCP</span><span class="text-muted">ranking codebase signatures</span></div>
-      <div class="relative h-2 rounded-full bg-bg overflow-hidden"><div class="bar-fill absolute inset-0 bg-sigmap/30"></div></div>
-    </div>
-  </section>
-
-  <!-- RESULT -->
-  <section id="result">
-    <!-- combined answer -->
-    <div class="bg-surface rounded-xl p-5 mb-3 border-l-4 gradline border-y border-r border-edge">
-      <div class="flex items-center justify-between mb-4">
-        <h2 class="font-bold text-lg">DualContext Investigation Result</h2>
-        <div class="flex items-center gap-2 text-xs font-semibold">
-          <span class="px-3 py-1.5 rounded-full" style="background:rgba(101,224,117,.12);color:#65E075">Groundedness 0.83 · PASS</span>
-          <span class="px-3 py-1.5 rounded-full bg-card border border-edge text-muted">1.1s <span class="opacity-60">vs ~13 min manual</span></span>
-        </div>
-      </div>
-
-      <div class="space-y-3 text-sm leading-relaxed">
-        <div>
-          <div class="flex items-center gap-2 font-semibold text-splunk mb-1"><span class="dot bg-splunk"></span>Splunk shows</div>
-          <p class="text-ink/90 pl-4">47 NullPointerException in the last hour (first 10:17:33 CET), service <span class="mono">auth-service</span>, error rate <b>8× baseline</b>. Stack trace at <span class="mono">JwtTokenProvider:47</span>.</p>
-        </div>
-        <div>
-          <div class="flex items-center gap-2 font-semibold text-sigmap mb-1"><span class="dot bg-sigmap"></span>Code context (SigMap)</div>
-          <p class="text-ink/90 pl-4"><span class="mono">JwtTokenProvider.java</span> — <span class="mono">validateToken()</span> calls <span class="mono">getUsernameFromToken()</span>, which may return <b>null</b> for malformed tokens.</p>
-        </div>
-        <div>
-          <div class="font-semibold text-ink mb-1">Root cause</div>
-          <p class="text-ink/90 pl-4">A recent change removed the null guard before <span class="mono">token.getSubject()</span>; <span class="mono">validateToken()</span> then dereferences a null subject.</p>
-        </div>
-        <div>
-          <div class="font-semibold text-splunk mb-1">Recommended fix</div>
-          <p class="text-ink/90 pl-4">Add a null check in <span class="mono">validateToken()</span> at line 47 of <span class="mono">src/auth/JwtTokenProvider.java</span> before using the subject.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- two source panels -->
-    <div class="grid grid-cols-2 gap-3">
-      <!-- Splunk -->
-      <div class="bg-card border border-edge rounded-xl overflow-hidden">
-        <div class="flex items-center justify-between px-4 py-3 border-b border-edge" style="background:rgba(101,224,117,.06)">
-          <span class="font-semibold text-splunk flex items-center gap-2"><span class="dot bg-splunk"></span>Splunk Data</span>
-          <span class="text-xs text-muted mono">App 7931 · MCP</span>
-        </div>
-        <div class="p-4 space-y-2 text-xs">
-          <p class="text-muted">847 events analyzed · 3 SPL searches via <span class="mono text-ink">run_splunk_query</span></p>
-          <div class="mono bg-bg rounded-md p-2 text-ink/80 leading-relaxed">search index=main service=auth level=ERROR<br/>earliest=-1h | head 20 | stats count by message,line</div>
-          <div class="space-y-1 pt-1">
-            <div class="flex justify-between"><span class="mono text-ink/80">NPE @ JwtTokenProvider:47</span><span class="text-splunk">×23</span></div>
-            <div class="flex justify-between"><span class="mono text-ink/80">NPE @ JwtTokenProvider:47</span><span class="text-splunk">×14</span></div>
-            <div class="flex justify-between"><span class="mono text-ink/80">NPE @ JwtTokenProvider:47</span><span class="text-splunk">×10</span></div>
-          </div>
-        </div>
-      </div>
-      <!-- SigMap -->
-      <div class="bg-card border border-edge rounded-xl overflow-hidden">
-        <div class="flex items-center justify-between px-4 py-3 border-b border-edge" style="background:rgba(29,158,117,.06)">
-          <span class="font-semibold text-sigmap flex items-center gap-2"><span class="dot bg-sigmap"></span>SigMap Context</span>
-          <span class="text-xs text-muted mono">v7.0.0 · query_context</span>
-        </div>
-        <div class="p-4 space-y-2 text-xs">
-          <div class="space-y-2">
-            <div><div class="flex justify-between mb-1"><span class="mono text-ink/80">JwtTokenProvider.java</span><span class="text-sigmap font-semibold">0.91</span></div><div class="h-1.5 rounded-full bg-bg overflow-hidden"><div class="h-full bg-sigmap" style="width:91%"></div></div></div>
-            <div><div class="flex justify-between mb-1"><span class="mono text-ink/80">SecurityConfig.java</span><span class="text-sigmap font-semibold">0.73</span></div><div class="h-1.5 rounded-full bg-bg overflow-hidden"><div class="h-full bg-sigmap" style="width:73%"></div></div></div>
-            <div><div class="flex justify-between mb-1"><span class="mono text-ink/80">JwtAuthFilter.java</span><span class="text-sigmap font-semibold">0.68</span></div><div class="h-1.5 rounded-full bg-bg overflow-hidden"><div class="h-full bg-sigmap" style="width:68%"></div></div></div>
-          </div>
-          <div class="pt-2 border-t border-edge flex items-center justify-between">
-            <span class="text-muted">Token usage</span>
-            <span class="mono text-ink"><b class="text-sigmap">180</b> / 45,000 raw · <b class="text-sigmap">99.6%</b> ↓</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <footer class="text-center text-xs text-muted mt-7">
-    DualContext · Splunk MCP + SigMap MCP · Splunk hosted model (gpt-oss-120b) · © 2026 Manoj Mallick
-  </footer>
+<body class="bg-surface text-on-surface font-body-md overflow-x-hidden min-h-screen">
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 w-full z-50 bg-surface border-b border-outline-variant flex justify-between items-center px-lg py-sm">
+<div class="flex items-center gap-md">
+<span class="font-headline-md text-headline-md font-bold text-primary">DualContext</span>
+<div class="hidden md:flex gap-md ml-lg">
+<a class="text-primary border-b-2 border-primary pb-1 font-body-md text-body-md cursor-pointer active:opacity-80" href="investigation.html">Dashboard</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-body-md text-body-md cursor-pointer active:opacity-80" href="evidence.html">Incidents</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-body-md text-body-md cursor-pointer active:opacity-80" href="history.html">Analytics</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-body-md text-body-md cursor-pointer active:opacity-80" href="#">Settings</a>
 </div>
+</div>
+<div class="flex items-center gap-md">
+<!-- Connection Badges -->
+<div class="flex gap-sm">
+<div class="flex items-center gap-xs px-sm py-xs rounded bg-surface-container border border-outline-variant">
+<div class="status-dot bg-primary"></div>
+<span class="font-label-caps text-label-caps text-primary">Splunk MCP ● CONNECTED</span>
+</div>
+<div class="flex items-center gap-xs px-sm py-xs rounded bg-surface-container border border-outline-variant">
+<div class="status-dot bg-secondary"></div>
+<span class="font-label-caps text-label-caps text-secondary">SigMap MCP ● CONNECTED</span>
+</div>
+</div>
+<div class="flex gap-sm items-center text-on-surface-variant">
+<span class="material-symbols-outlined cursor-pointer hover:text-primary">settings_remote</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-primary">database</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-primary">notifications</span>
+<div class="w-8 h-8 rounded-full bg-surface-variant flex items-center justify-center overflow-hidden border border-outline-variant">
+<img alt="Investigator Profile" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBoMUV5-fJ7jkvXZcPmBzxqcGeEYmEo4bYR7So1-0KUcKOZXcgbF0cDb50Uw7CFg1Ck4orTx-ZBBhXS6kyte4az4sJYTHaD3vV7iaqNy30wiFLdgE2FWE7Lxr-DEmLXcvKui5vUTjE9r1tAajIeYoP7oUrrHh7FEh3ydz9gVJgilqUPnsBtk9UHmYWZNlf2XtvdG_45VxxMJtDHDkEXewsfec53Y_cNZVqyADD7WrTUIDum-yWlZ8izT9x6_qEYX5VNriojZwxJ5pw"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Sidebar -->
+<aside class="fixed left-0 top-[56px] h-[calc(100vh-56px)] w-[240px] bg-surface-container border-r border-outline-variant flex flex-col p-md z-40">
+<div class="mb-lg">
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Investigation</h2>
+<p class="font-label-caps text-label-caps text-on-surface-variant">INC-2024-0812</p>
+</div>
+<nav class="flex-1 flex flex-col gap-xs">
+<div class="flex items-center gap-md px-md py-sm bg-secondary-container text-on-secondary-container rounded-lg cursor-pointer scale-95 active:scale-90 transition-all">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-caps text-label-caps">Overview</span>
+</div>
+<div class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-variant rounded-lg cursor-pointer transition-all">
+<span class="material-symbols-outlined">database</span>
+<span class="font-label-caps text-label-caps">Splunk Logs</span>
+</div>
+<div class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-variant rounded-lg cursor-pointer transition-all">
+<span class="material-symbols-outlined">code</span>
+<span class="font-label-caps text-label-caps">SigMap Context</span>
+</div>
+<div class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-variant rounded-lg cursor-pointer transition-all">
+<span class="material-symbols-outlined">history</span>
+<span class="font-label-caps text-label-caps">Timeline</span>
+</div>
+<div class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-variant rounded-lg cursor-pointer transition-all">
+<span class="material-symbols-outlined">description</span>
+<span class="font-label-caps text-label-caps">Evidence</span>
+</div>
+</nav>
+<div class="pt-md mt-md border-t border-outline-variant flex flex-col gap-xs">
+<div class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-variant rounded-lg cursor-pointer transition-all">
+<span class="material-symbols-outlined">help</span>
+<span class="font-label-caps text-label-caps">Docs</span>
+</div>
+<div class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-variant rounded-lg cursor-pointer transition-all">
+<span class="material-symbols-outlined">contact_support</span>
+<span class="font-label-caps text-label-caps">Support</span>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-[240px] mt-[56px] p-xl flex flex-col gap-xl max-w-7xl mx-auto w-full">
+<!-- Hero Search Section -->
+<section class="flex flex-col gap-lg">
+<div class="flex flex-col gap-sm">
+<h1 class="font-headline-lg text-headline-lg text-on-surface">Investigation Interface</h1>
+<p class="text-on-surface-variant text-body-lg font-body-lg">Accelerating root cause analysis through parallel telemetry and semantic code mapping.</p>
+</div>
+<div class="relative w-full">
+<input class="w-full h-16 bg-surface-container-lowest border border-outline-variant rounded-xl px-md pr-[160px] text-body-lg font-body-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" placeholder="Describe the incident or ask about production behavior..." type="text"/>
+<button class="absolute right-md top-1/2 -translate-y-1/2 h-10 px-lg rounded-lg accent-gradient text-black font-bold text-body-md hover:opacity-90 active:scale-95 transition-all">
+                    Investigate →
+                </button>
+</div>
+<!-- Parallel Loading Indicators (Simulated State) -->
+<div class="grid grid-cols-2 gap-xl">
+<div class="flex flex-col gap-xs">
+<div class="flex justify-between font-label-caps text-label-caps">
+<span class="text-primary">Splunk Processing</span>
+<span>82%</span>
+</div>
+<div class="h-1 bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[82%] animate-pulse"></div>
+</div>
+</div>
+<div class="flex flex-col gap-xs">
+<div class="flex justify-between font-label-caps text-label-caps">
+<span class="text-secondary">SigMap Mapping</span>
+<span>65%</span>
+</div>
+<div class="h-1 bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-[65%] animate-pulse"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Main Results Grid (Bento Style) -->
+<div class="grid grid-cols-12 gap-lg">
+<!-- Result Card -->
+<div class="col-span-12 lg:col-span-8 bg-surface-container border border-outline-variant rounded-xl overflow-hidden flex flex-col">
+<div class="p-md border-b border-outline-variant flex justify-between items-center bg-surface-container-high">
+<span class="font-headline-sm text-headline-sm">DualContext Investigation Result</span>
+<div class="flex items-center gap-xs px-sm py-1 bg-primary/10 border border-primary/20 rounded-full">
+<span class="font-label-caps text-label-caps text-primary">Groundedness: 0.83 ✅ PASS</span>
+</div>
+</div>
+<div class="p-lg flex flex-col gap-lg">
+<!-- Splunk Section -->
+<div class="flex flex-col gap-sm">
+<div class="flex items-center gap-sm">
+<div class="status-dot bg-primary"></div>
+<h3 class="font-headline-sm text-headline-sm text-primary">Splunk Shows:</h3>
+</div>
+<div class="grid grid-cols-3 gap-md bg-surface border border-outline-variant rounded-lg p-md">
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant">Exception Count</p>
+<p class="font-headline-sm text-headline-sm text-primary">47 NullPointerException</p>
+</div>
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant">Target Service</p>
+<p class="font-headline-sm text-headline-sm">auth-service</p>
+</div>
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant">Error Rate</p>
+<p class="font-headline-sm text-headline-sm text-error">8x above baseline</p>
+</div>
+</div>
+</div>
+<!-- SigMap Section -->
+<div class="flex flex-col gap-sm">
+<div class="flex items-center gap-sm">
+<div class="status-dot bg-secondary"></div>
+<h3 class="font-headline-sm text-headline-sm text-secondary">Code Context (SigMap):</h3>
+</div>
+<div class="code-well rounded-lg p-md overflow-x-auto">
+<div class="flex items-center gap-sm mb-sm text-on-surface-variant font-code-sm text-code-sm">
+<span class="material-symbols-outlined text-sm">description</span>
+<span>JwtTokenProvider.java</span>
+<span class="text-secondary"># validateToken()</span>
+</div>
+<pre class="font-code-md text-code-md text-on-surface leading-relaxed"><span class="text-outline">24</span> public String getUsernameFromToken(String token) {
+<span class="text-outline">25</span>   Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+<span class="text-outline">26</span>   <span class="bg-secondary/20 border-l-2 border-secondary px-2">return claims.getSubject(); // may return null if subject is missing</span>
+<span class="text-outline">27</span> }</pre>
+</div>
+</div>
+<!-- Hypothesis Section -->
+<div class="flex flex-col gap-sm">
+<div class="flex items-center gap-sm">
+<h3 class="font-headline-sm text-headline-sm">Root Cause:</h3>
+</div>
+<p class="text-on-surface-variant leading-relaxed">
+                            The <span class="text-on-surface font-semibold">auth-service</span> is failing because the JWT parser is returning a null subject for specific legacy tokens that were issued without a subject claim. This leads to a <span class="text-error">NullPointerException</span> when the downstream identity validator attempts to process the returned user object.
+                        </p>
+</div>
+<!-- Recommended Fix -->
+<div class="bg-primary/5 border border-primary/20 rounded-lg p-md">
+<h4 class="font-label-caps text-label-caps text-primary mb-xs">Recommended Fix:</h4>
+<p class="text-primary font-semibold">Implement null-safe handling in <code class="font-code-md text-code-md bg-primary/10 px-1">getUsernameFromToken</code> and add a validation fallback for legacy claims.</p>
+</div>
+</div>
+</div>
+<!-- Stats/Context Side Column -->
+<div class="col-span-12 lg:col-span-4 flex flex-col gap-lg">
+<!-- Splunk Data Panel -->
+<div class="bg-surface-container border border-outline-variant rounded-xl p-md flex flex-col gap-md">
+<div class="flex justify-between items-center">
+<h3 class="font-label-caps text-label-caps text-primary">Splunk Data</h3>
+<img alt="Splunk Logo" class="opacity-50" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAfXUGDuJkgEiuX71pME7Sdyv6WhZ-sO4rY9WmC9YXq__dbeHMBbjMb7ZnoABMUYuO-UGjcxLqjYBuzNvm0cqRK9nYZ2btmOAuhx3R656VlE6XUkBakjILGfMSyguQ4kr3uaCoSYjUEXfu_QEEg7c9QL9cTLdurhyLKk9vFovMaGZweQgGNFDEWAznhyhyCvVsTiurv1ExKiTBUqvwxmPl3V8KIWLByqxoLCVXpvprvZDVkWjCZ3LfRE7v-aKzBefxZF2gH14W74ak"/>
+</div>
+<div class="flex flex-col gap-xs font-code-sm text-code-sm text-on-surface-variant">
+<div class="p-xs bg-surface border border-outline-variant rounded hover:border-primary transition-all cursor-pointer">
+                            index=prod service=auth level=ERROR | stats count by msg
+                        </div>
+<div class="p-xs bg-surface border border-outline-variant rounded hover:border-primary transition-all cursor-pointer">
+                            sourcetype=access_combined status=500 uri="/auth/verify"
+                        </div>
+<div class="p-xs bg-surface border border-outline-variant rounded hover:border-primary transition-all cursor-pointer">
+                            | timechart count(eval(status="500")) as failures
+                        </div>
+</div>
+<button class="w-full py-sm rounded ghost-border text-on-surface font-label-caps text-label-caps hover:bg-surface-variant transition-all">View Full Logs</button>
+</div>
+<!-- SigMap Context Panel -->
+<div class="bg-surface-container border border-outline-variant rounded-xl p-md flex flex-col gap-md">
+<div class="flex justify-between items-center">
+<h3 class="font-label-caps text-label-caps text-secondary">SigMap Context</h3>
+<img alt="SigMap Logo" class="opacity-50" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSC8KVEPJTungJwRjsz9v3izUaCI9guuW80oyDJKTZ4pJMIYN8x4CZ8pckNFweooVutP03FY2YM8hk8NzPokNHN4ySzY_YSEOwkH4sqmbBiSYQOHX8Gl-LLL-7oAU9xWSagO-qCYZOOjymKDfuAbTFFP8cUg8K7TuGKWeAqckeG2p-HTvUHUkmWpyX1FS1jpxGbfTSiDSM992Cb07ySvHm0-mcApiDEjtnw6bi6LAjK6RtANPeqsYRf0nVhT_bQz8_IIET6MaAeys"/>
+</div>
+<div class="flex flex-col gap-sm">
+<div class="flex justify-between items-center px-sm py-xs bg-surface border-l-2 border-secondary rounded">
+<span class="font-body-sm text-body-sm">JwtTokenProvider.java</span>
+<span class="font-label-caps text-label-caps text-secondary">0.98 Match</span>
+</div>
+<div class="flex justify-between items-center px-sm py-xs bg-surface border-l-2 border-outline-variant rounded opacity-70">
+<span class="font-body-sm text-body-sm">AuthValidationFilter.java</span>
+<span class="font-label-caps text-label-caps">0.65 Match</span>
+</div>
+<div class="flex justify-between items-center px-sm py-xs bg-surface border-l-2 border-outline-variant rounded opacity-50">
+<span class="font-body-sm text-body-sm">IdentityController.java</span>
+<span class="font-label-caps text-label-caps">0.42 Match</span>
+</div>
+</div>
+<button class="w-full py-sm rounded ghost-border text-on-surface font-label-caps text-label-caps hover:bg-surface-variant transition-all">Open Graph View</button>
+</div>
+<!-- Visual Background Atmospheric Element -->
+<div class="relative h-48 rounded-xl overflow-hidden border border-outline-variant">
 
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container to-transparent p-md flex items-end">
+<span class="font-label-caps text-label-caps text-on-surface-variant">Semantic Cluster Visualization</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Micro-interaction Scripts -->
 <script>
-  const go = document.getElementById('go');
-  const status = document.getElementById('status');
-  const result = document.getElementById('result');
-  function run() {
-    result.style.opacity = .25; status.classList.remove('hidden');
-    go.textContent = 'Investigating…'; go.disabled = true;
-    setTimeout(() => {
-      status.classList.add('hidden'); result.style.opacity = 1;
-      go.textContent = 'Investigate →'; go.disabled = false;
-    }, 1600);
-  }
-  go.addEventListener('click', run);
-</script>
-</body>
-</html>
+        document.querySelectorAll('.cursor-pointer').forEach(el => {
+            el.addEventListener('click', () => {
+                el.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    el.style.transform = '';
+                }, 100);
+            });
+        });
+    </script>
+</body></html>

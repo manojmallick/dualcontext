@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Investigation Analytics | DualContext</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: #1C2030;
+            border: 1px solid #2A3347;
+        }
+        .ghost-border {
+            border: 1px solid #2A3347;
+        }
+        .accent-gradient {
+            background: linear-gradient(135deg, #82fd8e 0%, #68dbae 100%);
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0B0D12;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2A3347;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3E4A3C;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed-dim": "#feb693",
+                        "primary": "#82fd8e",
+                        "on-surface": "#dde5d8",
+                        "on-secondary-fixed": "#002115",
+                        "secondary-container": "#26a37a",
+                        "primary-fixed": "#81fc8d",
+                        "on-primary-container": "#006120",
+                        "secondary": "#68dbae",
+                        "on-tertiary-fixed-variant": "#6b3a1f",
+                        "inverse-surface": "#dde5d8",
+                        "tertiary-container": "#ffb794",
+                        "on-error": "#690005",
+                        "surface-variant": "#30372e",
+                        "error-container": "#93000a",
+                        "surface-container-lowest": "#091009",
+                        "surface": "#0e150e",
+                        "on-primary": "#003910",
+                        "secondary-fixed-dim": "#68dbae",
+                        "surface-container": "#1b211a",
+                        "tertiary-fixed": "#ffdbcb",
+                        "surface-tint": "#64df74",
+                        "on-primary-fixed": "#002106",
+                        "inverse-on-surface": "#2b322a",
+                        "on-tertiary": "#50240b",
+                        "on-tertiary-fixed": "#341100",
+                        "surface-container-highest": "#30372e",
+                        "error": "#ffb4ab",
+                        "surface-bright": "#343b33",
+                        "secondary-fixed": "#86f8c9",
+                        "outline-variant": "#3e4a3c",
+                        "primary-fixed-dim": "#64df74",
+                        "on-secondary-container": "#003121",
+                        "tertiary": "#ffdccd",
+                        "on-tertiary-container": "#7a462a",
+                        "on-primary-fixed-variant": "#00531a",
+                        "surface-dim": "#0e150e",
+                        "on-surface-variant": "#bdcab9",
+                        "outline": "#879484",
+                        "on-error-container": "#ffdad6",
+                        "on-secondary": "#003827",
+                        "on-secondary-fixed-variant": "#00513a",
+                        "on-background": "#dde5d8",
+                        "primary-container": "#65e075",
+                        "background": "#0e150e",
+                        "inverse-primary": "#006e26",
+                        "surface-container-low": "#171d16",
+                        "surface-container-high": "#252c24"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "base": "4px",
+                        "gutter": "16px",
+                        "lg": "24px",
+                        "xs": "4px",
+                        "sm": "8px",
+                        "md": "16px",
+                        "xl": "32px",
+                        "margin": "24px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "code-md": ["JetBrains Mono"],
+                        "code-sm": ["JetBrains Mono"],
+                        "headline-sm": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-caps": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "body-sm": ["12px", {"lineHeight": "18px", "fontWeight": "400"}],
+                        "code-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "code-sm": ["12px", {"lineHeight": "18px", "fontWeight": "400"}],
+                        "headline-sm": ["18px", {"lineHeight": "24px", "fontWeight": "600"}],
+                        "headline-lg": ["30px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface font-body-md selection:bg-primary/30">
+<!-- Top Navigation Bar -->
+<header class="flex justify-between items-center px-lg py-sm w-full z-50 bg-surface border-b border-outline-variant fixed top-0 h-16">
+<div class="flex items-center gap-xl">
+<span class="font-headline-md text-headline-md font-bold text-primary tracking-tight">DualContext</span>
+<nav class="hidden md:flex gap-md">
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors cursor-pointer" href="investigation.html">Dashboard</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors cursor-pointer" href="evidence.html">Incidents</a>
+<a class="font-body-md text-body-md text-primary border-b-2 border-primary pb-1 transition-colors cursor-pointer" href="history.html">Analytics</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors cursor-pointer" href="#">Settings</a>
+</nav>
+</div>
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary transition-colors" data-icon="settings_remote">settings_remote</span>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary transition-colors" data-icon="database">database</span>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary transition-colors" data-icon="notifications">notifications</span>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant">
+<img alt="Investigator Profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBj_V1gwRUM8Sx99E_1Gq4UCvAkciZgjZk2bPps3BBqw7EL8SY3xyXnUn7Slnm1WY8eoxLxR7wzhqPyMOXZBx4TsWL74y3ChJi_NKAdJG1lw9PGsVph-k_E1zgJl8XueKbkmJ84qUccbNWXILH75WWe9tRdSKg51MlrQIgMfRxCfhDfloz1SoLLNexFk-hb-3tiyn8qXOuixfPbJwF14tvMQk6q_jDvSZrWatcyWYNutIa793A9NQOXCWAhmHtiGAZREGsq1CBAwSg"/>
+</div>
+</div>
+</header>
+<!-- Sidebar -->
+<aside class="fixed left-0 top-16 h-[calc(100vh-64px)] w-[240px] bg-surface-container border-r border-outline-variant flex flex-col p-md hidden lg:flex">
+<div class="flex flex-col gap-sm mb-lg">
+<div class="flex items-center gap-sm px-sm py-xs">
+<div class="w-10 h-10 rounded-lg bg-surface-variant flex items-center justify-center border border-outline-variant">
+<span class="material-symbols-outlined text-primary" data-icon="monitoring">monitoring</span>
+</div>
+<div>
+<p class="font-label-caps text-label-caps uppercase text-on-surface-variant">Investigation</p>
+<p class="font-headline-sm text-headline-sm text-on-surface leading-tight">Analytics</p>
+</div>
+</div>
+<p class="px-sm text-[10px] text-on-tertiary-container font-code-sm bg-tertiary-container/10 border border-tertiary-container/20 rounded px-2 py-0.5 self-start mx-sm">INC-2024-0812</p>
+</div>
+<nav class="flex-grow space-y-1">
+<div class="flex items-center gap-sm px-md py-sm text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all cursor-pointer scale-95 active:scale-90">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-caps text-label-caps">Overview</span>
+</div>
+<div class="flex items-center gap-sm px-md py-sm text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all cursor-pointer scale-95 active:scale-90">
+<span class="material-symbols-outlined" data-icon="database">database</span>
+<span class="font-label-caps text-label-caps">Splunk Logs</span>
+</div>
+<div class="flex items-center gap-sm px-md py-sm text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all cursor-pointer scale-95 active:scale-90">
+<span class="material-symbols-outlined" data-icon="code">code</span>
+<span class="font-label-caps text-label-caps">SigMap Context</span>
+</div>
+<div class="flex items-center gap-sm px-md py-sm bg-secondary-container text-on-secondary-container rounded-lg transition-all cursor-pointer scale-95 active:scale-90">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span class="font-label-caps text-label-caps">Timeline</span>
+</div>
+<div class="flex items-center gap-sm px-md py-sm text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all cursor-pointer scale-95 active:scale-90">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+<span class="font-label-caps text-label-caps">Evidence</span>
+</div>
+</nav>
+<div class="pt-lg border-t border-outline-variant space-y-1">
+<div class="flex items-center gap-sm px-md py-sm text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all cursor-pointer">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span class="font-label-caps text-label-caps">Docs</span>
+</div>
+<div class="flex items-center gap-sm px-md py-sm text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all cursor-pointer">
+<span class="material-symbols-outlined" data-icon="contact_support">contact_support</span>
+<span class="font-label-caps text-label-caps">Support</span>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="lg:ml-[240px] pt-16 min-h-screen">
+<div class="max-w-[1400px] mx-auto p-gutter lg:p-xl space-y-xl">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-md">
+<div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface">Investigation Analytics</h1>
+<div class="flex items-center gap-sm mt-1">
+<span class="text-on-surface-variant font-body-md">— Last 30 Days</span>
+<span class="bg-surface-container-highest text-primary text-[10px] font-bold px-2 py-0.5 rounded tracking-widest uppercase border border-outline-variant">Projected — sample data</span>
+</div>
+</div>
+<button class="flex items-center gap-sm px-lg py-sm rounded bg-primary text-on-primary font-bold hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-[20px]" data-icon="download">download</span>
+                    Export Report
+                </button>
+</div>
+<!-- Metric Cards -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
+<div class="glass-panel p-md flex flex-col justify-between group hover:border-primary/50 transition-colors">
+<div class="flex justify-between items-start">
+<span class="text-on-surface-variant font-label-caps">TOTAL INVESTIGATIONS</span>
+<span class="material-symbols-outlined text-primary/40 group-hover:text-primary transition-colors" data-icon="hub">hub</span>
+</div>
+<div class="mt-md">
+<h2 class="text-3xl font-bold text-on-surface">247</h2>
+<p class="text-secondary font-body-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="arrow_upward">arrow_upward</span> 12% vs last month
+                        </p>
+</div>
+</div>
+<div class="glass-panel p-md flex flex-col justify-between group hover:border-primary/50 transition-colors">
+<div class="flex justify-between items-start">
+<span class="text-on-surface-variant font-label-caps">AVG RESOLUTION TIME</span>
+<span class="material-symbols-outlined text-primary/40 group-hover:text-primary transition-colors" data-icon="timer">timer</span>
+</div>
+<div class="mt-md">
+<h2 class="text-3xl font-bold text-on-surface">45s</h2>
+<p class="text-primary font-bold font-body-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="bolt">bolt</span> 94% faster vs manual
+                        </p>
+</div>
+</div>
+<div class="glass-panel p-md flex flex-col justify-between group hover:border-primary/50 transition-colors">
+<div class="flex justify-between items-start">
+<span class="text-on-surface-variant font-label-caps">AVG GROUNDEDNESS</span>
+<span class="material-symbols-outlined text-primary/40 group-hover:text-primary transition-colors" data-icon="verified">verified</span>
+</div>
+<div class="mt-md">
+<h2 class="text-3xl font-bold text-on-surface">0.79</h2>
+<div class="w-full bg-surface-container h-1 mt-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[79%]"></div>
+</div>
+</div>
+</div>
+<div class="glass-panel p-md flex flex-col justify-between group hover:border-primary/50 transition-colors">
+<div class="flex justify-between items-start">
+<span class="text-on-surface-variant font-label-caps">MTTR IMPROVEMENT</span>
+<span class="material-symbols-outlined text-primary/40 group-hover:text-primary transition-colors" data-icon="speed">speed</span>
+</div>
+<div class="mt-md">
+<h2 class="text-3xl font-bold text-on-surface">89%</h2>
+<p class="text-secondary font-body-sm">Issues Resolved Faster</p>
+</div>
+</div>
+</div>
+<!-- Bento Grid Charts -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Time Savings Comparison -->
+<div class="lg:col-span-8 glass-panel p-lg flex flex-col h-full min-h-[400px]">
+<div class="flex justify-between items-start mb-xl">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Time Savings Comparison</h3>
+<p class="text-on-surface-variant text-body-sm">DualContext vs. Manual investigation baseline</p>
+</div>
+<div class="text-right">
+<p class="text-primary font-bold text-2xl">53.5 hours</p>
+<p class="text-on-surface-variant text-[10px] font-label-caps">TOTAL TIME SAVED</p>
+</div>
+</div>
+<div class="flex-grow flex items-end justify-around gap-xl pb-md">
+<!-- Manual Bar -->
+<div class="flex flex-col items-center gap-md w-full max-w-[120px]">
+<div class="relative w-full bg-surface-variant/30 h-[280px] rounded-t-lg overflow-hidden flex flex-col justify-end">
+<div class="w-full bg-outline-variant h-[100%] transition-all duration-1000"></div>
+</div>
+<div class="text-center">
+<p class="font-bold text-on-surface">13min</p>
+<p class="text-[10px] font-label-caps text-on-surface-variant">MANUAL</p>
+</div>
+</div>
+<!-- DualContext Bar -->
+<div class="flex flex-col items-center gap-md w-full max-w-[120px]">
+<div class="relative w-full bg-surface-variant/30 h-[280px] rounded-t-lg overflow-hidden flex flex-col justify-end">
+<div class="w-full accent-gradient h-[5%] transition-all duration-1000 delay-300"></div>
+</div>
+<div class="text-center">
+<p class="font-bold text-primary">45s</p>
+<p class="text-[10px] font-label-caps text-primary">DUALCONTEXT</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Contribution Donut Chart -->
+<div class="lg:col-span-4 glass-panel p-lg flex flex-col">
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-xl">Context Attribution</h3>
+<div class="flex-grow flex flex-col items-center justify-center gap-lg">
+<div class="relative w-48 h-48">
+<svg class="w-full h-full -rotate-90" viewbox="0 0 36 36">
+<circle cx="18" cy="18" fill="none" r="15.915" stroke="#2A3347" stroke-width="3"></circle>
+<circle cx="18" cy="18" fill="none" r="15.915" stroke="#82fd8e" stroke-dasharray="45 55" stroke-dashoffset="0" stroke-width="3"></circle>
+<circle cx="18" cy="18" fill="none" r="15.915" stroke="#26a37a" stroke-dasharray="31 69" stroke-dashoffset="-45" stroke-width="3"></circle>
+<circle cx="18" cy="18" fill="none" r="15.915" stroke="#68dbae" stroke-dasharray="24 76" stroke-dashoffset="-76" stroke-width="3"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-3xl font-bold">100%</span>
+<span class="text-[10px] font-label-caps text-on-surface-variant">COVERAGE</span>
+</div>
+</div>
+<div class="w-full space-y-sm">
+<div class="flex justify-between items-center px-sm">
+<div class="flex items-center gap-sm">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<span class="text-body-sm">Both needed</span>
+</div>
+<span class="font-bold">45%</span>
+</div>
+<div class="flex justify-between items-center px-sm">
+<div class="flex items-center gap-sm">
+<div class="w-2 h-2 rounded-full bg-secondary-container"></div>
+<span class="text-body-sm">Splunk-only</span>
+</div>
+<span class="font-bold">31%</span>
+</div>
+<div class="flex justify-between items-center px-sm">
+<div class="flex items-center gap-sm">
+<div class="w-2 h-2 rounded-full bg-secondary"></div>
+<span class="text-body-sm">SigMap-only</span>
+</div>
+<span class="font-bold">24%</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Groundedness Trend (Line Chart Area) -->
+<div class="lg:col-span-7 glass-panel p-lg">
+<div class="flex justify-between items-center mb-lg">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Groundedness Trend</h3>
+<div class="flex gap-sm">
+<span class="text-[10px] font-label-caps text-on-surface-variant border border-outline-variant px-2 py-1 rounded">7D</span>
+<span class="text-[10px] font-label-caps text-primary border border-primary px-2 py-1 rounded">30D</span>
+<span class="text-[10px] font-label-caps text-on-surface-variant border border-outline-variant px-2 py-1 rounded">90D</span>
+</div>
+</div>
+<div class="h-64 w-full relative">
+<!-- Mockup SVG Graph -->
+<svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 400 100">
+<defs>
+<lineargradient id="lineGradient" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#82fd8e" stop-opacity="0.2"></stop>
+<stop offset="100%" stop-color="#82fd8e" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<path d="M0,80 Q50,75 80,60 T140,55 T200,45 T280,30 T360,25 T400,20 L400,100 L0,100 Z" fill="url(#lineGradient)"></path>
+<path d="M0,80 Q50,75 80,60 T140,55 T200,45 T280,30 T360,25 T400,20" fill="none" stroke="#82fd8e" stroke-width="2"></path>
+</svg>
+<div class="absolute inset-0 grid grid-cols-5 pointer-events-none">
+<div class="border-l border-outline-variant/30 h-full"></div>
+<div class="border-l border-outline-variant/30 h-full"></div>
+<div class="border-l border-outline-variant/30 h-full"></div>
+<div class="border-l border-outline-variant/30 h-full"></div>
+<div class="border-l border-outline-variant/30 h-full"></div>
+</div>
+<div class="flex justify-between mt-4 text-[10px] font-label-caps text-on-surface-variant">
+<span>AUG 01</span>
+<span>AUG 10</span>
+<span>AUG 20</span>
+<span>AUG 30</span>
+</div>
+</div>
+</div>
+<!-- Most Investigated Services -->
+<div class="lg:col-span-5 glass-panel p-lg">
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-xl">Hotspot Services</h3>
+<div class="space-y-md">
+<div class="space-y-xs">
+<div class="flex justify-between text-body-sm">
+<span class="font-code-md">auth-service</span>
+<span class="text-on-surface-variant">84 calls</span>
+</div>
+<div class="h-2 bg-surface-container rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[85%]"></div>
+</div>
+</div>
+<div class="space-y-xs">
+<div class="flex justify-between text-body-sm">
+<span class="font-code-md">payment-gateway</span>
+<span class="text-on-surface-variant">62 calls</span>
+</div>
+<div class="h-2 bg-surface-container rounded-full overflow-hidden">
+<div class="bg-secondary-container h-full w-[65%]"></div>
+</div>
+</div>
+<div class="space-y-xs">
+<div class="flex justify-between text-body-sm">
+<span class="font-code-md">inventory-api</span>
+<span class="text-on-surface-variant">41 calls</span>
+</div>
+<div class="h-2 bg-surface-container rounded-full overflow-hidden">
+<div class="bg-secondary-container h-full w-[45%]"></div>
+</div>
+</div>
+<div class="space-y-xs">
+<div class="flex justify-between text-body-sm">
+<span class="font-code-md">user-profile-db</span>
+<span class="text-on-surface-variant">29 calls</span>
+</div>
+<div class="h-2 bg-surface-container rounded-full overflow-hidden">
+<div class="bg-outline-variant h-full w-[30%]"></div>
+</div>
+</div>
+<div class="space-y-xs">
+<div class="flex justify-between text-body-sm">
+<span class="font-code-md">notification-node</span>
+<span class="text-on-surface-variant">12 calls</span>
+</div>
+<div class="h-2 bg-surface-container rounded-full overflow-hidden">
+<div class="bg-outline-variant h-full w-[15%]"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Recent Investigations Table -->
+<div class="glass-panel overflow-hidden">
+<div class="p-lg border-b border-outline-variant flex justify-between items-center">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Recent Activity Log</h3>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" data-icon="search">search</span>
+<input class="bg-background border border-outline-variant rounded-lg pl-10 pr-4 py-1.5 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all w-64" placeholder="Filter queries..." type="text"/>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-high border-b border-outline-variant">
+<th class="px-lg py-sm font-label-caps text-label-caps text-on-surface-variant">TIME</th>
+<th class="px-lg py-sm font-label-caps text-label-caps text-on-surface-variant">QUERY</th>
+<th class="px-lg py-sm font-label-caps text-label-caps text-on-surface-variant">SOURCES</th>
+<th class="px-lg py-sm font-label-caps text-label-caps text-on-surface-variant">GROUNDEDNESS</th>
+<th class="px-lg py-sm font-label-caps text-label-caps text-on-surface-variant">RESOLUTION</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<tr class="hover:bg-surface-variant/50 transition-colors cursor-pointer">
+<td class="px-lg py-md font-code-sm text-on-surface-variant">14:22:15</td>
+<td class="px-lg py-md font-body-md text-on-surface truncate max-w-xs">High latency on checkout-service during peak...</td>
+<td class="px-lg py-md">
+<div class="flex gap-xs">
+<span class="bg-surface-container text-[10px] px-1.5 py-0.5 rounded border border-outline-variant">Splunk</span>
+<span class="bg-surface-container text-[10px] px-1.5 py-0.5 rounded border border-outline-variant">SigMap</span>
+</div>
+</td>
+<td class="px-lg py-md">
+<div class="flex items-center gap-sm">
+<div class="h-1.5 w-16 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[92%]"></div>
+</div>
+<span class="text-[10px] font-bold">0.92</span>
+</div>
+</td>
+<td class="px-lg py-md">
+<span class="flex items-center gap-sm text-primary text-sm font-bold">
+<div class="w-1.5 h-1.5 rounded-full bg-primary"></div>
+                                        FIXED (32s)
+                                    </span>
+</td>
+</tr>
+<tr class="hover:bg-surface-variant/50 transition-colors cursor-pointer">
+<td class="px-lg py-md font-code-sm text-on-surface-variant">14:05:01</td>
+<td class="px-lg py-md font-body-md text-on-surface truncate max-w-xs">Database connection timeout in prod-cluster-2</td>
+<td class="px-lg py-md">
+<div class="flex gap-xs">
+<span class="bg-surface-container text-[10px] px-1.5 py-0.5 rounded border border-outline-variant">Splunk</span>
+</div>
+</td>
+<td class="px-lg py-md">
+<div class="flex items-center gap-sm">
+<div class="h-1.5 w-16 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-secondary-container w-[74%]"></div>
+</div>
+<span class="text-[10px] font-bold">0.74</span>
+</div>
+</td>
+<td class="px-lg py-md">
+<span class="flex items-center gap-sm text-secondary text-sm font-bold">
+<div class="w-1.5 h-1.5 rounded-full bg-secondary"></div>
+                                        PENDING
+                                    </span>
+</td>
+</tr>
+<tr class="hover:bg-surface-variant/50 transition-colors cursor-pointer">
+<td class="px-lg py-md font-code-sm text-on-surface-variant">13:58:44</td>
+<td class="px-lg py-md font-body-md text-on-surface truncate max-w-xs">Auth handshake failure for mobile-client-v2</td>
+<td class="px-lg py-md">
+<div class="flex gap-xs">
+<span class="bg-surface-container text-[10px] px-1.5 py-0.5 rounded border border-outline-variant">SigMap</span>
+</div>
+</td>
+<td class="px-lg py-md">
+<div class="flex items-center gap-sm">
+<div class="h-1.5 w-16 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[88%]"></div>
+</div>
+<span class="text-[10px] font-bold">0.88</span>
+</div>
+</td>
+<td class="px-lg py-md">
+<span class="flex items-center gap-sm text-primary text-sm font-bold">
+<div class="w-1.5 h-1.5 rounded-full bg-primary"></div>
+                                        FIXED (58s)
+                                    </span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-md bg-surface-container-low flex justify-center border-t border-outline-variant">
+<button class="text-on-surface-variant font-label-caps hover:text-primary transition-colors flex items-center gap-sm">
+                        Load More Records
+                        <span class="material-symbols-outlined text-[16px]" data-icon="expand_more">expand_more</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Background Atmospheric Effect -->
+<div class="fixed inset-0 pointer-events-none -z-10 opacity-20 overflow-hidden">
+
+</div>
+<script>
+        // Simple Interaction logic
+        document.querySelectorAll('tr').forEach(row => {
+            row.addEventListener('mousedown', function() {
+                this.classList.add('scale-[0.995]');
+            });
+            row.addEventListener('mouseup', function() {
+                this.classList.remove('scale-[0.995]');
+            });
+        });
+
+        // Hover animations for metric cards
+        document.querySelectorAll('.glass-panel').forEach(panel => {
+            panel.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-2px)';
+                this.style.transition = 'all 0.2s ease-out';
+            });
+            panel.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body></html>
